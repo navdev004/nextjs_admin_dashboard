@@ -1,55 +1,62 @@
 import React from 'react'
 import styles from "@/app/ui/dashboard/users/SingleUser/SingleUser.module.css"
 import Image from 'next/image'
+import { fetchUser } from '@/app/lib/data';
+import { updateUser } from '@/app/lib/actions';
 
-const SingleUserPage = () => {
+const SingleUserPage = async({params}) => {
+    const {id}  = params;
+    const user = await fetchUser(id);
+    console.log(user);
+
     return (
         <div className={styles.container}>
             <div className={styles.infoContainer}>
                 <div className={styles.imgContainer}>
                     <Image src="/avatar.png" alt='' fill />
                 </div>
-                John Doe
+                {user?.username}
             </div>
             <div className={styles.formContainer}>
-                <form action="" className={styles.form}>
+                <form action={updateUser} className={styles.form}>
+                    <input type="hidden" name="id" value={user._id}/>
                     <label htmlFor="">Username</label>
-                    <input type="text" name="username" placeholder='John Doe' />
+                    <input type="text" name="username" placeholder={user.username} />
 
                     <label htmlFor="">Email</label>
-                    <input type="text" name="username" placeholder='John Doe' />
+                    <input type="text" name="email" placeholder={user.email} />
 
                     <label htmlFor="">Password</label>
                     <input type="password" name="password" />
 
                     <label htmlFor="">Phone</label>
-                    <input type="text" name="phone" placeholder='+123456' />
+                    <input type="text" name="phone" placeholder={user?.phone} />
 
                     <label htmlFor="">Address</label>
-                    <textarea name="address" placeholder='New York'></textarea>
+                    <textarea name="address" placeholder={user.address}></textarea>
 
                     <label htmlFor="">Is Admin?</label>
                     <select name="isAdmin" id="isAdmin">
-                        <option value={false} selected>Is Admin?</option>
-                        <option value={true}>Yes</option>
-                        <option value={false}>No</option>
+                       
+                        <option value={true} selected={user.isAdmin}>Yes</option>
+                        <option value={false} selected={!user.isAdmin}>No</option>
 
                     </select>
 
                     <label htmlFor="">Is Active?</label>
 
                     <select name="isActive" id="isActive">
-                        <option value={true} selected>Is Active?</option>
-                        <option value={true}>Yes</option>
-                        <option value={false}>No</option>
+                     
+                        <option value={true} selected={user.isActive}>Yes</option>
+                        <option value={false} selected={!user.isActive}>No</option>
 
                     </select>
-                    <button type='button'>Submit</button>
+                    <button type='submit'>Submit</button>
 
                 </form>
             </div>
-        </div>
+        </div>  
     )
 }
 
-export default SingleUserPage
+export default SingleUserPage 

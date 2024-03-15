@@ -3,6 +3,7 @@ import Image from 'next/image';
 import MenuLink from './menuLink/menuLink';
 import styles from './sidebar.module.css'
 import { MdAnalytics, MdAttachMoney, MdDashboard, MdHelpCenter, MdLogout, MdOutlineSettings, MdPeople, MdShoppingBag, MdSupervisedUserCircle, MdWork } from'react-icons/md';
+import { signOut } from '@/app/auth';
 
 const menuItems = [
   {
@@ -91,10 +92,15 @@ const Sidebar = () => {
 
         ))}
       </ul>
-      <button className={styles.logout}>
+  <form action={async()=>{
+    "use server";
+    await signOut();
+  }}>
+  <button className={styles.logout}>
         <MdLogout />
         Logout
       </button>
+  </form>
     </div>
   )
 }

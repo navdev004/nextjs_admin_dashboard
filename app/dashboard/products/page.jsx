@@ -5,7 +5,19 @@ import Image from "next/image"
 import Link from "next/link"
 import React from 'react'
 
-const Products = () => {
+import { fetchProducts } from "@/app/lib/data"
+import { deleteProduct } from "@/app/lib/actions"
+
+const Products = async({searchParams}) => {
+
+  
+  const q= searchParams?.q || "";
+  const page= searchParams?.page || 1;
+
+
+  const {products,count} = await fetchProducts(q,page);
+
+
   return (
     <div className={styles.container}>
     <div className={styles.top}>
@@ -26,35 +38,43 @@ const Products = () => {
         </tr>
       </thead>
       <tbody>
-        <tr>
+        {
+          products.map((product) =>(
+            <tr key={product._id}>
           <td>
             <div className={styles.product}>
               <Image
-               src="/avatar.png"
+               src={product?.img || "/avatar.png"}
                alt=''
                width={40}
                height={40}
                className={styles.productImage}
                />
-               Iphone
+               {product?.title}
             </div>
           </td>
-          <td>Desc</td>
-          <td>$999</td>
-          <td>13.01.2022</td>
-          <td>active</td>
+          <td> {product?.desc}</td>
+          <td>${product?.price}</td>
+          <td>{product?.createdAt?.toString().slice(4,16)}</td>
+          <td>{product?.stock}</td>
           <td>
             <div className={styles.buttons}>
-            <Link href={"/dashboard/products/test"}>
+            <Link href={`{/dashboard/products/${product._id}}`}>
               <button className={`${styles.button} ${styles.view}`}>View</button>
             </Link>
+            <form action={deleteProduct}>
+              <input type="hidden" name="id" value={product._id}/>
             <button className={`${styles.button} ${styles.delete}`}>Delete</button>
+
+            </form>
             </div>
           </td>
         </tr>
+          ))
+        }
       </tbody>
     </table>
-    <Pagination/>
+    <Pagination count={count}/>
   </div>
   )
 }
