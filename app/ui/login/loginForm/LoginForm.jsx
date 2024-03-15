@@ -12,8 +12,8 @@ const LoginForm = () => {
             <form action={formAction} className={styles.form}>
                 <h1>Login</h1>
 
-                <input type="text" placeholder='username' name='username' />
-                <input type="text" placeholder='password' name='password' />
+                <input type="text" placeholder='kelen' name='username' />
+                <input type="text" placeholder='12345678' name='password' />
                 <button>Login</button>
                 {state && state}
             </form>
